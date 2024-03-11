@@ -1,6 +1,8 @@
 'use server';
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 // This schema will validate the formData before saving it to a database.
 const FormSchema = z.object({
@@ -33,4 +35,9 @@ export async function createInvoice(formData: FormData) {
     INSERT INTO invoices (customer_id, amount, status, date)
     VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
   `;
+
+  // UPDATE the data displayed in the invoices route, CLEAR this cache and TRIGGER a new request to the server.
+  // database UPDATED, the /dashboard/invoices path will be REVALIDATED, and fresh data will be FETCHED from the server.
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
 }
