@@ -17,6 +17,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
 
     // provides utility methods for manipulating the URL query parameters
     const params = new URLSearchParams(searchParams);
+    params.set('page', '1');
 
     if (term) {
       params.set('query', term);
@@ -26,7 +27,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
 
     // ${pathname} is the current path
     replace(`${pathname}?${params.toString()}`); // e.g. /dashboard/invoices?query=lee
-}, 300);
+  }, 300);
 
   return (
     <div className="relative flex flex-1 flex-shrink-0">
